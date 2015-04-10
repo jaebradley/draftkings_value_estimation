@@ -35,7 +35,10 @@ def return_raw_box_score(box_score_url):
         raw_player_box_score_list.append(data)
     return raw_player_box_score_list
 
-def return_formatted_box_score_as_dataframe(raw_box_score_list,box_score_column_names,date):
+def return_formatted_box_score_as_dataframe(date):
+    box_score_url = return_box_score_url(date)
+    box_score_column_names = return_box_score_column_names(box_score_url)
+    raw_box_score_list = return_raw_box_score(box_score_url)
     formatted_box_score_list = list()
     step = len(box_score_column_names)
     stop = len(raw_box_score_list) - 1
@@ -59,8 +62,34 @@ def return_formatted_box_score_as_dataframe(raw_box_score_list,box_score_column_
         draftkings_score = int(temp_dict['pts']) + 0.5 * int(temp_dict['fg3']) + 1.25 * int(temp_dict['trb']) + 1.5 * int(temp_dict['ast']) + 2 * int(temp_dict['stl']) + 2 * int(temp_dict['blk']) - 0.5 * int(temp_dict['tov'])
         temp_dict['draftkings_score'] = draftkings_score
         temp_dict['date'] = date
-        formatted_box_score_list.append(temp_dict)
-    box_score_df = DataFrame.from_dict(formatted_box_score_list)
+        first_name = temp_dict['player'].split(" ")[0]
+        last_name = temp_dict['player'].split(" ")[1]
+        temp_list = [
+            first_name,
+            last_name,
+            temp_dict['date'],
+            temp_dict['team_id'],
+            temp_dict['opp_id'],
+            temp_dict['mp'],
+            temp_dict['fg'],
+            temp_dict['fga'],
+            temp_dict['fg3'],
+            temp_dict['fg3a'],
+            temp_dict['ft'],
+            temp_dict['fta'],
+            temp_dict['orb'],
+            temp_dict['drb'],
+            temp_dict['trb'],
+            temp_dict['ast'],
+            temp_dict['stl'],
+            temp_dict['blk'],
+            temp_dict['tov'],
+            temp_dict['pf'],
+            temp_dict['pts'],
+            temp_dict['draftkings_score']
+        ]
+        formatted_box_score_list.append(temp_list)
+    box_score_df = DataFrame(formatted_box_score_list)
     return box_score_df
 
 
