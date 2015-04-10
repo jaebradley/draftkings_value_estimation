@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.engine.url import URL
-from sqlalchemy.sql.expression import delete
 from models.nba.config import DRAFTKINGS_NBA
-from models.nba.model import Position
+import csv
+
 
 def add_data_to_team_table():
 
@@ -22,4 +22,3 @@ def add_data_to_team_table():
     team = Table("team", metadata, autoload=True)
     team_insert = team.insert()
     team_insert.execute(insert_nba_team_name_list)
-

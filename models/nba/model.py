@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, PrimaryKeyConstraint, UniqueConstraint
 from sqlalchemy import VARCHAR, INTEGER, DATE, TEXT, FLOAT, TIME
+from sqlalchemy.orm import relationship, backref, relation
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -19,8 +20,8 @@ class Team(Base):
     __tablename__ = "team"
 
     id = Column(INTEGER, primary_key=True)
-    name = Column("name", VARCHAR(length=50))
-    abbreviation = Column("abbreviation", VARCHAR(length=20))
+    name = Column("name", VARCHAR(length=200))
+    abbreviation = Column("abbreviation", VARCHAR(length=100))
 
     __table_args__ = ((UniqueConstraint("name", "abbreviation", name="name_abbreviation")),)
 
@@ -29,8 +30,8 @@ class Game(Base):
     __tablename__ = "game"
 
     id = Column(INTEGER, primary_key=True)
-    home_team = Column("home_team", ForeignKey(Team.id))
-    away_team = Column("away_team", ForeignKey(Team.id))
+    home_team = Column(INTEGER, ForeignKey(Team.id))
+    away_team = Column(INTEGER, ForeignKey(Team.id))
     date = Column("date", DATE)
 
     __table_args__ = (UniqueConstraint("home_team", "away_team", "date", name="custom_uc_home_away_date"),)
