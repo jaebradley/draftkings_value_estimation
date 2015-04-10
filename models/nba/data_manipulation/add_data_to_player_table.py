@@ -1,25 +1,31 @@
 from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.engine.url import URL
-from sqlalchemy.sql.expression import delete
 from models.nba.config import DRAFTKINGS_NBA
-from models.nba.model import Position
+from models.nba.model import Team, Player, Position
+import csv
 
-def add_data_to_team_table():
-
-    with open('data_files/nba_team_name_map.csv') as file:
-        reader = csv.reader(file)
-        nba_team_name_list = list(reader)[1:]
-        insert_nba_team_name_list = list()
-        for team in nba_team_name_list:
-            temp_dict = {
-                'name': team[2],
-                'abbreviation': team[1]
-            }
-            insert_nba_team_name_list.append(temp_dict)
+def add_data_to_player_table():
 
     mysql_connection = create_engine(URL(**DRAFTKINGS_NBA))
-    metadata = MetaData(mysql_connection)
-    team = Table("team", metadata, autoload=True)
-    team_insert = team.insert()
-    team_insert.execute(insert_nba_team_name_list)
+    session = sessionmaker(bind=mysql_connection)
+    insert_session = session()
+
+    with open('data_files/player_position.csv') as file:
+        reader = csv.reader(file)
+        nba_player_list = list(reader)[1:]
+        for player in nba_player_list:
+
+            first_name = player[0]
+            last_name = player[1]
+            position = player[2]
+            team_abbreviation = player[3]
+
+            team_object = insert_session.query(Team).filter_by(abbreviation=team_abbreviation).one()
+            position_object = insert_session.query(Position).filter_by(abbreviation=position).one()
+
+            player = Player(first_name=first_name, last_name=last_name, team=team_object.id, position=position_object.id)
+            insert_session.add(player)
+            insert_session.commit()
+
 

@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.engine.url import URL
-from sqlalchemy.sql.expression import delete
 from models.nba.config import DRAFTKINGS_NBA
 from models.nba.model import Team, Game
 import csv
@@ -15,7 +14,6 @@ def add_data_to_game_table():
     with open('data_files/nba_schedule.txt') as file:
         reader = csv.reader(file)
         nba_schedule_list = list(reader)[1:]
-        insert_nba_schedule_list = list()
         for game in nba_schedule_list:
             home_team = game[2]
             away_team = game[1]

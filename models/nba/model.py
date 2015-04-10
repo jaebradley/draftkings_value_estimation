@@ -43,8 +43,8 @@ class Player(Base):
     id = Column(INTEGER, primary_key=True)
     first_name = Column("first_name", VARCHAR(length=250))
     last_name = Column("last_name", VARCHAR(length=250))
-    team = Column("team", ForeignKey(Team.id))
-    position = Column("position", ForeignKey(Position.id))
+    team = Column(INTEGER, ForeignKey(Team.id))
+    position = Column(INTEGER, ForeignKey(Position.id))
     number = Column("number", INTEGER, nullable=True)
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", "team", "position", "number", name="custom_uc_first_name_last_name_team_position_number"),)
