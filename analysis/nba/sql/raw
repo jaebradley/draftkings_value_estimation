@@ -1,0 +1,39 @@
+/* Basic Mapping */
+SELECT
+  bs.player
+FROM boxscore AS bs
+JOIN player AS pl ON bs.player = pl.id
+JOIN game AS g ON bs.game = g.id
+JOIN position AS po ON pl.position = po.id
+JOIN team AS t ON g.home_team = t.id
+JOIN team AS t1 ON g.away_team = t1.id
+WHERE g.date = '2015-04-01'
+GROUP BY
+  bs.player;
+
+/* Last Game Played */
+SELECT
+  bs1.player AS player,
+  MAX(g1.date) AS date
+FROM boxscore AS bs1
+  JOIN player AS pl1
+    ON bs1.player = pl1.id
+  JOIN game AS g1
+    ON bs1.game = g1.id
+WHERE g1.date < '2015-04-01'
+GROUP BY bs1.player;
+
+
+/* Player Points Since Set Date */
+SELECT
+  bs.player,
+  CONCAT(pl.first_name, " ", pl.last_name) AS player_name,
+  AVG(bs.draftkings_score)
+FROM boxscore AS bs
+  JOIN game AS g
+    ON bs.game = g.id
+  JOIN player AS pl
+	ON bs.player = pl.id
+WHERE g.date >= '2015-04-01'
+GROUP BY gs.player;
+
