@@ -54,11 +54,11 @@ class DraftkingsPlayerSalary(Base):
     __tablename__ = "draftkings_player_salary"
 
     id = Column(INTEGER, primary_key=True)
+    game = Column("game", ForeignKey(Game.id))
     player = Column("player", ForeignKey(Player.id))
     salary = Column("salary", FLOAT(precision=2))
-    date = Column("date", DATE)
 
-    __table_args__ = (UniqueConstraint("player", "salary", "date", name="custom_uc_player_salary_date"),)
+    __table_args__ = (UniqueConstraint("game", "player", name="custom_uc_draftkigns_player_game"),)
 
 class BasketballReferenceBoxscore(Base):
 

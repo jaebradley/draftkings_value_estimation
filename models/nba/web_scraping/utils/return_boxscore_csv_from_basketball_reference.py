@@ -35,7 +35,4 @@ def return_boxscore_csv(date):
     boxscore_df = boxscore_scraper.return_formatted_box_score_as_dataframe(date)
     boxscore_df.to_csv(csv_filepath, index=False, header=column_names)
 
-date = dt.date.today() - dt.timedelta(days=1)
-return_boxscore_csv(date)
-
 
