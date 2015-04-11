@@ -1,10 +1,13 @@
+import csv
+import os
+
 from sqlalchemy import create_engine, or_, and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
-from models.nba.config import DRAFTKINGS_NBA
+
+from config import DRAFTKINGS_NBA
 from models.nba.model import Team, Player, Game, BasketballReferenceBoxscore
-import csv
-import os
+
 
 def add_data_to_boxscore_table():
 

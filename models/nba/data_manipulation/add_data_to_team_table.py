@@ -1,7 +1,9 @@
+import csv
+
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.engine.url import URL
-from models.nba.config import DRAFTKINGS_NBA
-import csv
+
+from config import DRAFTKINGS_NBA
 
 
 def add_data_to_team_table():

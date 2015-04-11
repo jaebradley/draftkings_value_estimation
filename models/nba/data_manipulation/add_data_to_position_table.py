@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.engine.url import URL
-from sqlalchemy.sql.expression import delete
-from models.nba.config import DRAFTKINGS_NBA
-from models.nba.model import Position
+
+from config import DRAFTKINGS_NBA
+
 
 def add_data_to_position_table():
 

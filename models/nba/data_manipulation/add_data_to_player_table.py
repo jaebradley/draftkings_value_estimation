@@ -1,9 +1,12 @@
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.orm import sessionmaker, relationship, backref
-from sqlalchemy.engine.url import URL
-from models.nba.config import DRAFTKINGS_NBA
-from models.nba.model import Team, Player, Position
 import csv
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.engine.url import URL
+
+from config import DRAFTKINGS_NBA
+from models.nba.model import Team, Player, Position
+
 
 def add_data_to_player_table():
 

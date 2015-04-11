@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
-from models.nba.config import SERVER
+
+from config import SERVER
+
 
 mysql_connection = create_engine(URL(**SERVER))
 mysql_connection.execute("CREATE DATABASE draftkings_nba")
