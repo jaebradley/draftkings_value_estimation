@@ -39,16 +39,13 @@ def return_player_position_list():
             raw_names = player.split(" ",)
             first_name = raw_names[0]
             last_name = raw_names[1]
-            if not any(d[0] == first_name and d[1] == last_name for d in player_position_list):
-                temp_list = [
-                    first_name,
-                    last_name,
-                    position,
-                    team_id
-                ]
-                player_position_list.append(temp_list)
-            else:
-                continue
+            temp_list = [
+                first_name,
+                last_name,
+                position,
+                team_id
+            ]
+            player_position_list.append(temp_list)
     return player_position_list
 
 def return_player_team_dict():

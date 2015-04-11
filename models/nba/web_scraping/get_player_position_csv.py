@@ -1,0 +1,3 @@
+from models.nba.web_scraping.utils.return_player_position_csv_from_basketball_reference import return_player_position_csv
+
+return_player_position_csv()

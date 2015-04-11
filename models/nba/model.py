@@ -68,7 +68,7 @@ class BasketballReferenceBoxscore(Base):
     player = Column("player", ForeignKey(Player.id))
     game = Column("game", ForeignKey(Game.id))
     date = Column("date", DATE)
-    minutes_played = Column("minutes_played", TIME)
+    seconds_played = Column("seconds_played", INTEGER)
     made_field_goals = Column("made_field_goals", INTEGER)
     attempted_field_goals = Column("attempted_field_goals", INTEGER)
     made_three_point_field_goals = Column("made_three_point_field_goals", INTEGER)

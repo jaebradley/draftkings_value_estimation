@@ -12,8 +12,8 @@ def add_data_to_boxscore_table():
     session = sessionmaker(bind=mysql_connection)
     insert_session = session()
 
-    for file in os.listdir("../data_files/boxscores/"):
-        filepath = "../data_files/boxscores/{0}".format(file)
+    for file in os.listdir("data_files/boxscores/"):
+        filepath = "data_files/boxscores/{0}".format(file)
         with open(filepath) as file:
             print "Reading from {0}".format(filepath)
             reader = csv.reader(file)
@@ -26,7 +26,7 @@ def add_data_to_boxscore_table():
                 date = player_boxscore[2]
                 team_abbreviation = player_boxscore[3]
                 opponent_abbreviation = player_boxscore[4]
-                minutes_played = player_boxscore[5]
+                seconds_played = player_boxscore[5]
                 made_field_goals = player_boxscore[6]
                 attempted_field_goals = player_boxscore[7]
                 made_three_point_field_goals = player_boxscore[8]
@@ -44,39 +44,37 @@ def add_data_to_boxscore_table():
                 points = player_boxscore[20]
                 draftkings_score = player_boxscore[21]
 
-                team_object = insert_session.query(Team).filter(Team.abbreviation==team_abbreviation).one()
-                opponent_object = insert_session.query(Team).filter(Team.abbreviation==opponent_abbreviation).one()
-                player_object = insert_session.query(Player).filter(Player.first_name == first_name, Player.last_name == last_name, Player.team == team_object.id)
-                print player_object.id
-                #home + away = team + opponent
-                #concat(home,away) = concat(team,opponent) or concat(opponent,team)
-                game_object = insert_session.query(Game).filter(Game.date==date).filter(and_(or_(Game.home_team == team_object.id, Game.away_team == team_object.id),or_(Game.home_team == opponent_object.id, Game.away_team == opponent_object.id))).one()
-                # boxscore_object = BasketballReferenceBoxscore(
-                #     player=player_object.id,
-                #     game=game_object.id,
-                #     date=date,
-                #     minutes_played=minutes_played,
-                #     made_field_goals=made_field_goals,
-                #     attempted_field_goals=attempted_field_goals,
-                #     made_three_point_field_goals=made_three_point_field_goals,
-                #     attempted_three_point_field_goals=attempted_three_point_field_goals,
-                #     made_free_throws=made_free_throws,
-                #     attempted_free_throws=attempted_free_throws,
-                #     offensive_rebounds=offensive_rebounds,
-                #     defensive_rebounds=defensive_rebounds,
-                #     total_rebounds=total_rebounds,
-                #     assists=assists,
-                #     steals=steals,
-                #     blocks=blocks,
-                #     turnovers=turnovers,
-                #     fouls_committed=fouls_committed,
-                #     points=points,
-                #     draftkings_score=draftkings_score
-                # )
-                # insert_session.add(boxscore_object)
-                # insert_session.commit()
-
-add_data_to_boxscore_table()
-
+                try:
+                    team_object = insert_session.query(Team).filter(Team.abbreviation==team_abbreviation).one()
+                    opponent_object = insert_session.query(Team).filter(Team.abbreviation==opponent_abbreviation).one()
+                    player_object = insert_session.query(Player).filter(and_(Player.first_name==first_name, Player.last_name ==last_name, Player.team == team_object.id)).one()
+                    game_object = insert_session.query(Game).filter(Game.date==date).filter(and_(or_(Game.home_team == team_object.id, Game.away_team == team_object.id),or_(Game.home_team == opponent_object.id, Game.away_team == opponent_object.id))).one()
+                    boxscore_object = BasketballReferenceBoxscore(
+                        player=player_object.id,
+                        game=game_object.id,
+                        date=date,
+                        seconds_played=seconds_played,
+                        made_field_goals=made_field_goals,
+                        attempted_field_goals=attempted_field_goals,
+                        made_three_point_field_goals=made_three_point_field_goals,
+                        attempted_three_point_field_goals=attempted_three_point_field_goals,
+                        made_free_throws=made_free_throws,
+                        attempted_free_throws=attempted_free_throws,
+                        offensive_rebounds=offensive_rebounds,
+                        defensive_rebounds=defensive_rebounds,
+                        total_rebounds=total_rebounds,
+                        assists=assists,
+                        steals=steals,
+                        blocks=blocks,
+                        turnovers=turnovers,
+                        fouls_committed=fouls_committed,
+                        points=points,
+                        draftkings_score=draftkings_score
+                    )
+                    insert_session.add(boxscore_object)
+                    insert_session.commit()
+                except Exception as error_message:
+                    print "Error:{0} for {1} {2}".format(error_message, first_name, last_name)
+                    continue
 
 

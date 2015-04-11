@@ -13,7 +13,7 @@ def return_boxscore_csv(date):
         'date',
         'team_abbreviation',
         'opponent_abbreviation',
-        'minutes_played',
+        'seconds_played',
         'made_field_goals',
         'attempted_field_goals',
         'made_three_point_field_goals',

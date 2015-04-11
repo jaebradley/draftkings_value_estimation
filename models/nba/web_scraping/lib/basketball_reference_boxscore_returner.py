@@ -49,8 +49,8 @@ def return_formatted_box_score_as_dataframe(date):
         for count in range(0,step):
             element = player_box_score[count]
             key = box_score_column_names[count]
-            if 'mp' == key:
-                element = '00:' + element
+            if 'mp' == key and element == '':
+                element = '00:00'
             elif 'fg_pct' == key or 'fg3_pct' == key or 'ft_pct' == key:
                 element = '0' + element
             elif 'game_location' == key:
@@ -64,13 +64,15 @@ def return_formatted_box_score_as_dataframe(date):
         temp_dict['date'] = date
         first_name = temp_dict['player'].split(" ")[0]
         last_name = temp_dict['player'].split(" ")[1]
+        (m, s) = temp_dict['mp'].split(':')
+        seconds_played = int(m) * 60 + int(s)
         temp_list = [
             first_name,
             last_name,
             temp_dict['date'],
             temp_dict['team_id'],
             temp_dict['opp_id'],
-            temp_dict['mp'],
+            seconds_played,
             temp_dict['fg'],
             temp_dict['fga'],
             temp_dict['fg3'],
