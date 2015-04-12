@@ -5,8 +5,7 @@ FROM boxscore AS bs
 JOIN player AS pl ON bs.player = pl.id
 JOIN game AS g ON bs.game = g.id
 JOIN position AS po ON pl.position = po.id
-JOIN team AS t ON g.home_team = t.id
-JOIN team AS t1 ON g.away_team = t1.id
+JOIN team AS t ON g.home_team = t.id OR g.away_team = t.id
 WHERE g.date = '2015-04-01'
 GROUP BY
   bs.player;
@@ -71,11 +70,11 @@ GROUP BY
 SELECT
   opp_stats_by_game.position,
   opp_stats_by_game.opp,
-  SUM(opp_stats_by_game.points) AS points,
-  SUM(opp_stats_by_game.rebounds) AS rebounds,
-  SUM(opp_stats_by_game.assists) AS assists,
-  SUM(opp_stats_by_game.blocks) AS blocks,
-  SUM(opp_stats_by_game.turnovers) AS turnovers
+  AVG(opp_stats_by_game.points) AS points,
+  AVG(opp_stats_by_game.rebounds) AS rebounds,
+  AVG(opp_stats_by_game.assists) AS assists,
+  AVG(opp_stats_by_game.blocks) AS blocks,
+  AVG(opp_stats_by_game.turnovers) AS turnovers
 FROM (
 	SELECT
 	  p.position,
@@ -109,4 +108,125 @@ GROUP BY
   opp_stats_by_game.position,
   opp_stats_by_game.opp
   ;
+
+/* Combined Query */
+SELECT
+  bs.player,
+  po.id,
+  opp_team.name AS opp,
+  player_team.name AS player_team,
+  last_game.date,
+  CASE
+    WHEN DATEDIFF('{DATE}',last_game.date) = 1 THEN 1
+    ELSE 0
+  END AS b2b,
+  opp_conceded.draftkings_score,
+  p28_days.avg_draftkings_score,
+  p14_days.avg_draftkings_score,
+  p7_days.avg_draftkings_score
+FROM boxscore AS bs
+JOIN player AS pl ON bs.player = pl.id
+JOIN game AS g ON bs.game = g.id
+JOIN position AS po ON pl.position = po.id
+JOIN team AS opp_team ON g.home_team = opp_team.id OR g.away_team = opp_team.id
+JOIN team AS player_team ON player_team.id = pl.team
+LEFT JOIN (
+  SELECT
+  bs1.player AS player,
+  MAX(g1.date) AS date
+FROM boxscore AS bs1
+  JOIN player AS pl1
+    ON bs1.player = pl1.id
+  JOIN game AS g1
+    ON bs1.game = g1.id
+WHERE g1.date < '{DATE}'
+GROUP BY bs1.player
+) AS last_game ON last_game.player = bs.player
+LEFT JOIN (
+SELECT
+  bs2.player,
+  AVG(bs2.draftkings_score) AS avg_draftkings_score
+FROM boxscore AS bs2
+  JOIN game AS g2
+    ON bs2.game = g2.id
+  JOIN player AS pl2
+	ON bs2.player = pl2.id
+WHERE g2.date >= '{PREVIOUS7DAYS}'
+  AND g2.date < '{DATE}'
+GROUP BY bs2.player
+) AS p7_days ON p7_days.player = bs.player
+LEFT JOIN (
+SELECT
+  bs2.player,
+  AVG(bs2.draftkings_score) AS avg_draftkings_score
+FROM boxscore AS bs2
+  JOIN game AS g2
+    ON bs2.game = g2.id
+  JOIN player AS pl2
+	ON bs2.player = pl2.id
+WHERE g2.date >= '{PREVIOUS14DAYS}'
+  AND g2.date < '{DATE}'
+GROUP BY bs2.player
+) AS p14_days ON p14_days.player = bs.player
+LEFT JOIN (
+SELECT
+  bs2.player,
+  AVG(bs2.draftkings_score) AS avg_draftkings_score
+FROM boxscore AS bs2
+  JOIN game AS g2
+    ON bs2.game = g2.id
+  JOIN player AS pl2
+	ON bs2.player = pl2.id
+WHERE g2.date >= '{PREVIOUS28DAYS}'
+  AND g2.date < '{DATE}'
+GROUP BY bs2.player
+) AS p28_days ON p28_days.player = bs.player
+LEFT JOIN (
+SELECT
+  opp_stats_by_game.position,
+  opp_stats_by_game.opp,
+  AVG(opp_stats_by_game.points) AS points,
+  AVG(opp_stats_by_game.rebounds) AS rebounds,
+  AVG(opp_stats_by_game.assists) AS assists,
+  AVG(opp_stats_by_game.blocks) AS blocks,
+  AVG(opp_stats_by_game.turnovers) AS turnovers,
+  AVG(opp_stats_by_game.draftkings_score) AS draftkings_score
+FROM (
+	SELECT
+	  p.position,
+	  t.id AS opp,
+	  t1.id AS team,
+	  SUM(bs.points) AS points,
+	  SUM(bs.total_rebounds) AS rebounds,
+	  SUM(bs.assists) AS assists,
+	  SUM(bs.steals) AS steals,
+	  SUM(bs.blocks) AS blocks,
+	  SUM(bs.turnovers) AS turnovers,
+	  AVG(bs.draftkings_score) AS draftkings_score
+	FROM team AS t
+	  JOIN game AS g
+	    ON g.away_team = t.id OR g.home_team = t.id
+	  JOIN boxscore AS bs
+	    ON bs.game = g.id
+	  JOIN player AS p
+	    ON p.id = bs.player
+	  JOIN team AS t1
+	    ON p.team = t1.id
+	WHERE
+	  t.id != t1.id
+	  AND g.date >= '{PREVIOUS28DAYS}'
+	  AND g.date <= '{DATE}'
+	GROUP BY
+	  p.position,
+	  t.id,
+	  t1.id
+	) AS opp_stats_by_game
+GROUP BY
+  opp_stats_by_game.position,
+  opp_stats_by_game.opp
+) AS opp_conceded ON opp_conceded.position = po.id AND opp_conceded.opp = opp_team.id
+WHERE g.date = '{DATE}'
+  AND opp_team.id != player_team.id
+GROUP BY
+  bs.player
 
