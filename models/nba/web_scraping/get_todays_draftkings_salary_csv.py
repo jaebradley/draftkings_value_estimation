@@ -1,3 +1,0 @@
-from models.nba.web_scraping.utils.return_draftkings_salary_csv import draftkings_salary_to_csv
-
-draftkings_salary_to_csv()

@@ -1,18 +1,14 @@
-import sqlalchemy
-import csv
-import os
 import datetime as dt
 import pandas as pd
 
-from sqlalchemy import create_engine, or_, and_
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 
 from config import DRAFTKINGS_NBA
-from models.nba.model import Team, Player, Position, Game, BasketballReferenceBoxscore
 
 
-def return_data(date):
+def return_player_data_for_date_as_df(date):
 
     date_format = "%Y-%m-%d"
     date_string = date.strftime(date_format)
@@ -160,15 +156,11 @@ def return_data(date):
         # boxscores for the given date
         player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "p28_day_avg_draftkings_score", "p14_day_avg_draftkings_score", "p7_day_avg_draftkings_score", "actual_draftkings_score").from_statement(formatted_sql).all()
         column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "p28_day_avg_draftkings_score", "p14_day_avg_draftkings_score", "p7_day_avg_draftkings_score", "actual_draftkings_score"]
-        print player_data_for_date[:10]
         player_data_for_date_df = pd.DataFrame(player_data_for_date, columns=column_names)
-        print player_data_for_date_df
+        return player_data_for_date_df
 
     except Exception as error_message:
         print "Error:{0}".format(error_message)
 
-date = dt.date.today() - dt.timedelta(days=5)
-
-return_data(date)
 
 

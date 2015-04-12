@@ -1,4 +1,4 @@
-import models.nba.web_scraping.lib.basketball_reference_boxscore_returner as boxscore_scraper
+import data_model.nba.web_scraping.lib.basketball_reference_boxscore_returner as boxscore_scraper
 import pandas as pd
 import datetime as dt
 

@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 
 from config import DRAFTKINGS_NBA
-from models.nba.model import Team, Game
+from data_model.nba.model import Team, Game
 
 
 def add_data_to_game_table():

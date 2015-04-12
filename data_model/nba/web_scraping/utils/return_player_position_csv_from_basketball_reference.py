@@ -1,4 +1,4 @@
-import models.nba.web_scraping.lib.basketball_reference_player_position_returner as player_scraper
+import data_model.nba.web_scraping.lib.basketball_reference_player_position_returner as player_scraper
 import pandas as pd
 
 def return_player_position_csv():

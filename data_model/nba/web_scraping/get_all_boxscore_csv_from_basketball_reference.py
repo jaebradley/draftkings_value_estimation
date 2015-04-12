@@ -1,5 +1,5 @@
-from models.nba.web_scraping.utils.return_boxscore_csv_from_basketball_reference import return_boxscore_csv
-from models.nba.web_scraping.utils.date_utils import daterange
+from data_model.nba.web_scraping.utils.return_boxscore_csv_from_basketball_reference import return_boxscore_csv
+from data_model.nba.web_scraping.utils.date_utils import daterange
 import datetime as dt
 
 start_date = dt.date(year=2015, month=4, day=9)

@@ -1,4 +1,4 @@
-from models.nba.web_scraping.lib.draftkings_player_salary_returner import return_draftkings_daily_nba_player_salary_as_dataframe
+from data_model.nba.web_scraping.lib.draftkings_player_salary_returner import return_draftkings_daily_nba_player_salary_as_dataframe
 import datetime as dt
 
 def draftkings_salary_to_csv():
