@@ -37,3 +37,76 @@ FROM boxscore AS bs
 WHERE g.date >= '2015-04-01'
 GROUP BY gs.player;
 
+/* Statistics Given Up by Opposition to Team By Game */
+SELECT
+  p.position,
+  t.name AS opp,
+  t1.name AS team,
+  SUM(bs.points),
+  SUM(bs.total_rebounds),
+  SUM(bs.assists),
+  SUM(bs.steals),
+  SUM(bs.blocks),
+  SUM(bs.turnovers)
+FROM team AS t
+  JOIN game AS g
+    ON g.away_team = t.id OR g.home_team = t.id
+  JOIN boxscore AS bs
+    ON bs.game = g.id
+  JOIN player AS p
+    ON p.id = bs.player
+  JOIN team AS t1
+    ON p.team = t1.id
+WHERE
+  t.id != t1.id
+  AND g.date >= '2015-04-01'
+  AND g.date <= '2015-04-02'
+GROUP BY
+  p.position,
+  t.name,
+  t1.name;
+
+/* Rolled up statistics given up by team */
+
+SELECT
+  opp_stats_by_game.position,
+  opp_stats_by_game.opp,
+  SUM(opp_stats_by_game.points) AS points,
+  SUM(opp_stats_by_game.rebounds) AS rebounds,
+  SUM(opp_stats_by_game.assists) AS assists,
+  SUM(opp_stats_by_game.blocks) AS blocks,
+  SUM(opp_stats_by_game.turnovers) AS turnovers
+FROM (
+	SELECT
+	  p.position,
+	  t.id AS opp,
+	  t1.id AS team,
+	  SUM(bs.points) AS points,
+	  SUM(bs.total_rebounds) AS rebounds,
+	  SUM(bs.assists) AS assists,
+	  SUM(bs.steals) AS steals,
+	  SUM(bs.blocks) AS blocks,
+	  SUM(bs.turnovers) AS turnovers
+	FROM team AS t
+	  JOIN game AS g
+	    ON g.away_team = t.id OR g.home_team = t.id
+	  JOIN boxscore AS bs
+	    ON bs.game = g.id
+	  JOIN player AS p
+	    ON p.id = bs.player
+	  JOIN team AS t1
+	    ON p.team = t1.id
+	WHERE
+	  t.id != t1.id
+	  AND g.date >= '2015-04-01'
+	  AND g.date <= '2015-04-08'
+	GROUP BY
+	  p.position,
+	  t.id,
+	  t1.id
+	) AS opp_stats_by_game
+GROUP BY
+  opp_stats_by_game.position,
+  opp_stats_by_game.opp
+  ;
+
