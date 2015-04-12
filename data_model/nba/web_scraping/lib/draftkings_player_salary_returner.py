@@ -4,7 +4,7 @@ from StringIO import StringIO
 import csv
 
 def return_draftkings_daily_nba_player_salary_as_dataframe(date):
-    draftkings_nba_player_salary_url = 'https://www.draftkings.com/lineup/getavailableplayerscsv?contestTypeId=5&draftGroupId=6004'
+    draftkings_nba_player_salary_url = 'https://www.draftkings.com/lineup/getavailableplayerscsv?contestTypeId=5&draftGroupId=6033'
     response = url.urlopen(draftkings_nba_player_salary_url).read().replace('"','').split('\r\n')
     response = response[1:len(response) - 1]
     draftkings_player_list = list()
