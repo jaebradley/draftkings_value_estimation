@@ -21,7 +21,7 @@ def return_player_data_for_date_as_df(date):
       bs.player AS player,
       opp_team.name AS opp_team,
       player_team.name AS player_team,
-      last_game.date AS last_game,
+      last_game.draftkings_score AS last_game,
       CASE
         WHEN DATEDIFF('{DATE}',last_game.date) = 1 THEN 1
         ELSE 0
@@ -39,15 +39,27 @@ def return_player_data_for_date_as_df(date):
     JOIN team AS player_team ON player_team.id = pl.team
     LEFT JOIN (
       SELECT
-      bs1.player AS player,
-      MAX(g1.date) AS date
-    FROM boxscore AS bs1
-      JOIN player AS pl1
-        ON bs1.player = pl1.id
-      JOIN game AS g1
-        ON bs1.game = g1.id
-    WHERE g1.date < '{DATE}'
-    GROUP BY bs1.player
+          last_game1.player,
+          last_game1.date,
+          g.id,
+          bs.draftkings_score
+        FROM (
+        SELECT
+              bs1.player AS player,
+              pl1.team AS team,
+              MAX(g1.date) AS date
+            FROM boxscore AS bs1
+              JOIN player AS pl1
+                ON bs1.player = pl1.id
+              JOIN game AS g1
+                ON bs1.game = g1.id
+            WHERE g1.date < '2015-04-01'
+            GROUP BY bs1.player
+        ) AS last_game1
+        JOIN game AS g
+          ON g.date = last_game1.date AND (g.away_team = last_game1.team OR g.home_team = last_game1.team)
+        JOIN boxscore AS bs
+          ON bs.game = g.id AND last_game1.player = bs.player
     ) AS last_game ON last_game.player = bs.player
     LEFT JOIN (
     SELECT

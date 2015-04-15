@@ -8,7 +8,6 @@ from data_model.nba.web_scraping.utils.date_utils import daterange
 start_date = dt.date(year=2015, month=3, day=1)
 end_date = dt.date(year=2015, month=4, day=5)
 
-#column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "p28_day_avg_draftkings_score", "p14_day_avg_draftkings_score", "p7_day_avg_draftkings_score", "actual_draftkings_score"]
 combined_df = pd.DataFrame()
 for single_date in daterange(start_date,end_date):
     print single_date
