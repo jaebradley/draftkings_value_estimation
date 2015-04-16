@@ -46,6 +46,7 @@ class Player(Base):
     team = Column(INTEGER, ForeignKey(Team.id))
     position = Column(INTEGER, ForeignKey(Position.id))
     number = Column("number", INTEGER, nullable=True)
+    last_boxscore = Column("last_boxscore", DATE, nullable=True)
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", "team", "position", "number", name="custom_uc_first_name_last_name_team_position_number"),)
 

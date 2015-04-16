@@ -21,7 +21,7 @@ for single_date in daterange(start_date,end_date):
         pass
 
 print combined_df
-result = sm.ols(formula= "actual_draftkings_score ~ avg_opp_conceded_draftkings_score_for_position + p28_day_avg_draftkings_score + p14_day_avg_draftkings_score + p7_day_avg_draftkings_score + b2b", data=combined_df).fit()
+result = sm.ols(formula= "actual_draftkings_score ~ avg_opp_conceded_draftkings_score_for_position + p28_day_avg_draftkings_score + p14_day_avg_draftkings_score + p7_day_avg_draftkings_score + last_game + b2b", data=combined_df).fit()
 print result.summary()
 
 

@@ -48,10 +48,11 @@ def add_data_to_boxscore_table():
                 draftkings_score = player_boxscore[21]
 
                 try:
-                    team_object = insert_session.query(Team).filter(Team.abbreviation==team_abbreviation).one()
-                    opponent_object = insert_session.query(Team).filter(Team.abbreviation==opponent_abbreviation).one()
-                    player_object = insert_session.query(Player).filter(and_(Player.first_name==first_name, Player.last_name ==last_name, Player.team == team_object.id)).one()
-                    game_object = insert_session.query(Game).filter(Game.date==date).filter(and_(or_(Game.home_team == team_object.id, Game.away_team == team_object.id),or_(Game.home_team == opponent_object.id, Game.away_team == opponent_object.id))).one()
+                    team_object = insert_session.query(Team).filter(Team.abbreviation == team_abbreviation).one()
+                    opponent_object = insert_session.query(Team).filter(Team.abbreviation == opponent_abbreviation).one()
+                    player_object = insert_session.query(Player).filter(and_(Player.first_name == first_name, Player.last_name ==last_name, Player.team == team_object.id)).one()
+                    player_object.last_boxscore = date
+                    game_object = insert_session.query(Game).filter(Game.date == date).filter(and_(or_(Game.home_team == team_object.id, Game.away_team == team_object.id),or_(Game.home_team == opponent_object.id, Game.away_team == opponent_object.id))).one()
                     boxscore_object = BasketballReferenceBoxscore(
                         player=player_object.id,
                         game=game_object.id,
@@ -79,5 +80,3 @@ def add_data_to_boxscore_table():
                 except Exception as error_message:
                     print "Error:{0} for {1} {2}".format(error_message, first_name, last_name)
                     continue
-
-
