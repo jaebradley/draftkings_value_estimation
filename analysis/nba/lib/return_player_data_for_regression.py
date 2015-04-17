@@ -92,7 +92,7 @@ def return_player_data_for_date_as_df(date):
       JOIN player AS pl2
         ON bs2.player = pl2.id
     WHERE g2.date >= '{PREVIOUS14DAYS}'
-      AND g2.date < '{DATE}'
+      AND g2.date < '{PREVIOUS7DAYS}'
     GROUP BY bs2.player
     ) AS p14_days ON p14_days.player = bs.player
     LEFT JOIN (
@@ -105,7 +105,7 @@ def return_player_data_for_date_as_df(date):
       JOIN player AS pl2
         ON bs2.player = pl2.id
     WHERE g2.date >= '{PREVIOUS28DAYS}'
-      AND g2.date < '{DATE}'
+      AND g2.date < '{PREVIOUS14DAYS}'
     GROUP BY bs2.player
     ) AS p28_days ON p28_days.player = bs.player
     LEFT JOIN (
@@ -247,7 +247,7 @@ def return_player_data_for_date_as_df(date):
     formatted_sql = raw_sql.format(**magic_string_dict)
 
     mysql_connection = create_engine(URL(**DRAFTKINGS_NBA))
-    mysql_connection.echo = True
+    # mysql_connection.echo = True
     session = sessionmaker(bind=mysql_connection)
     insert_session = session()
 
