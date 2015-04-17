@@ -29,12 +29,16 @@ def return_player_data_for_date_as_df(date):
         ELSE 0
       END AS b2b,
       opp_conceded.draftkings_score AS avg_opp_conceded_draftkings_score_for_position,
-      p28_days.avg_draftkings_score AS p28_day_avg_draftkings_score,
-      p14_days.avg_draftkings_score AS p14_day_avg_draftkings_score,
-      p7_days.avg_draftkings_score AS p7_day_avg_draftkings_score,
+      0.6 * p7_days.avg_draftkings_score + 0.3 * p14_days.avg_draftkings_score + 0.1 * p28_days.avg_draftkings_score AS weighted_historical_draftkings_score,
       bs.draftkings_score AS actual_draftkings_score,
-      dnp.draftkings_score AS missing_draftkings_points,
-      dnp.seconds_played AS missing_seconds_played
+      CASE
+        WHEN dnp.draftkings_score IS NULL THEN 0
+        ELSE dnp.draftkings_score
+      END AS missing_draftkings_points,
+      CASE
+        WHEN dnp.seconds_played IS NULL THEN 0
+        ELSE dnp.seconds_played
+      END AS missing_seconds_played
     FROM boxscore AS bs
     JOIN player AS pl ON bs.player = pl.id
     JOIN game AS g ON bs.game = g.id
@@ -249,8 +253,8 @@ def return_player_data_for_date_as_df(date):
 
     try:
         # boxscores for the given date
-        player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "p28_day_avg_draftkings_score", "p14_day_avg_draftkings_score", "p7_day_avg_draftkings_score", "actual_draftkings_score").from_statement(formatted_sql).all()
-        column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "p28_day_avg_draftkings_score", "p14_day_avg_draftkings_score", "p7_day_avg_draftkings_score", "actual_draftkings_score"]
+        player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played").from_statement(formatted_sql).all()
+        column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played"]
         player_data_for_date_df = pd.DataFrame(player_data_for_date, columns=column_names)
         return player_data_for_date_df
 
