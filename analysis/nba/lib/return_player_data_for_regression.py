@@ -231,8 +231,12 @@ def return_player_data_for_date_as_df(date):
         )
         AND g.date >= '{PREVIOUS14DAYS}' AND g.date < '{DATE}'
         GROUP BY pl.id) AS player_dnp_stats
-        LEFT JOIN (
-            SELECT
+    GROUP BY
+      player_dnp_stats.team,
+      player_dnp_stats.position
+    ) AS dnp ON dnp.team = player_team.id AND dnp.position = pl.position
+    LEFT JOIN (
+        SELECT
           previous_player_performance.player,
           previous_player_performance.team,
           previous_player_performance.opp_team,
@@ -259,10 +263,6 @@ def return_player_data_for_date_as_df(date):
           previous_player_performance.team,
           previous_player_performance.opp_team
     ) AS previous_performance ON previous_performance.player = bs.player AND previous_performance.team = player_team.id AND previous_performance.opp_team = opp_team.id
-    GROUP BY
-      player_dnp_stats.team,
-      player_dnp_stats.position
-    ) AS dnp ON dnp.team = player_team.id AND dnp.position = pl.position
     WHERE g.date = '{DATE}'
       AND opp_team.id != player_team.id
     GROUP BY
@@ -279,7 +279,7 @@ def return_player_data_for_date_as_df(date):
     formatted_sql = raw_sql.format(**magic_string_dict)
 
     mysql_connection = create_engine(URL(**DRAFTKINGS_NBA))
-    mysql_connection.echo = True
+    # mysql_connection.echo = True
     session = sessionmaker(bind=mysql_connection)
     insert_session = session()
 
