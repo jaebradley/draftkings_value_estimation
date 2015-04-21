@@ -5,9 +5,9 @@ from analysis.nba.lib.return_player_data_for_regression import return_player_dat
 from data_model.nba.web_scraping.utils.date_utils import daterange
 
 
-start_date = dt.date(year=2015, month=2, day=20)
-end_date = dt.date(year=2015, month=3, day=5)
-prediction_date = dt.date(year=2015, month=3, day=6)
+start_date = dt.date(year=2015, month=3, day=1)
+end_date = dt.date(year=2015, month=4, day=5)
+prediction_date = dt.date(year=2015, month=4, day=6)
 
 combined_df = pd.DataFrame()
 for single_date in daterange(start_date,end_date):
@@ -20,15 +20,15 @@ for single_date in daterange(start_date,end_date):
         print error_message
         pass
 
-combined_df[['missing_draftkings_points', 'missing_seconds_played']] = combined_df[['missing_draftkings_points', 'missing_seconds_played']].astype(float)
+combined_df[['missing_draftkings_points', 'missing_seconds_played']] = combined_df[['missing_draftkings_points', 'missing_seconds_played', 'previous_performance']].astype(float)
 cleaned_df = combined_df.dropna()
 print cleaned_df.dtypes
 print "Getting out of sample data"
 raw_out_of_sample_df = return_player_data_for_date_as_df(date=prediction_date)
 cleaned_out_of_sample_df = raw_out_of_sample_df.dropna().reset_index(drop=True)
-cleaned_out_of_sample_df[['missing_draftkings_points', 'missing_seconds_played']] = cleaned_out_of_sample_df[['missing_draftkings_points', 'missing_seconds_played']].astype(float)
+cleaned_out_of_sample_df[['missing_draftkings_points', 'missing_seconds_played']] = cleaned_out_of_sample_df[['missing_draftkings_points', 'missing_seconds_played', 'previous_performance']].astype(float)
 print "Starting Regression"
-result = sm.ols(formula= "actual_draftkings_score ~ avg_opp_conceded_draftkings_score_for_position + weighted_historical_draftkings_score + missing_draftkings_points + missing_seconds_played + last_game + b2b ", data=cleaned_df).fit()
+result = sm.ols(formula= "actual_draftkings_score ~ avg_opp_conceded_draftkings_score_for_position + weighted_historical_draftkings_score + missing_draftkings_points + missing_seconds_played + previous_performance + last_game + b2b ", data=cleaned_df).fit()
 print result.summary()
 predictions = result.predict(cleaned_out_of_sample_df)
 predicted_values_df = pd.DataFrame(predictions,columns=["predicted_values"])

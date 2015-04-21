@@ -38,7 +38,11 @@ def return_player_data_for_date_as_df(date):
       CASE
         WHEN dnp.seconds_played IS NULL THEN 0
         ELSE dnp.seconds_played
-      END AS missing_seconds_played
+      END AS missing_seconds_played,
+      CASE
+        WHEN previous_performance.avg_draftkings_score IS NULL THEN p14_days.avg_draftkings_score
+        ELSE previous_performance.avg_draftkings_score
+      END AS previous_performance
     FROM boxscore AS bs
     JOIN player AS pl ON bs.player = pl.id
     JOIN game AS g ON bs.game = g.id
@@ -227,6 +231,34 @@ def return_player_data_for_date_as_df(date):
         )
         AND g.date >= '{PREVIOUS14DAYS}' AND g.date < '{DATE}'
         GROUP BY pl.id) AS player_dnp_stats
+        LEFT JOIN (
+            SELECT
+          previous_player_performance.player,
+          previous_player_performance.team,
+          previous_player_performance.opp_team,
+          AVG(previous_player_performance.draftkings_score) AS avg_draftkings_score
+        FROM (
+            SELECT
+              bs.player,
+              pl.team,
+              opp_team.id AS opp_team,
+              g.date,
+              bs.draftkings_score
+            FROM boxscore AS bs
+            JOIN game AS g ON g.id = bs.game
+            JOIN player AS pl ON pl.id = bs.player
+            JOIN team AS opp_team ON g.away_team = opp_team.id OR g.home_team = opp_team.id
+            WHERE g.date < '{DATE}'
+              AND pl.team != opp_team.id
+            GROUP BY
+              bs.player,
+              g.date
+        ) AS previous_player_performance
+        GROUP BY
+          previous_player_performance.player,
+          previous_player_performance.team,
+          previous_player_performance.opp_team
+    ) AS previous_performance ON previous_performance.player = bs.player AND previous_performance.team = player_team.id AND previous_performance.opp_team = opp_team.id
     GROUP BY
       player_dnp_stats.team,
       player_dnp_stats.position
@@ -247,14 +279,14 @@ def return_player_data_for_date_as_df(date):
     formatted_sql = raw_sql.format(**magic_string_dict)
 
     mysql_connection = create_engine(URL(**DRAFTKINGS_NBA))
-    # mysql_connection.echo = True
+    mysql_connection.echo = True
     session = sessionmaker(bind=mysql_connection)
     insert_session = session()
 
     try:
         # boxscores for the given date
-        player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played").from_statement(formatted_sql).all()
-        column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played"]
+        player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played", "previous_performance").from_statement(formatted_sql).all()
+        column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played", "previous_performance"]
         player_data_for_date_df = pd.DataFrame(player_data_for_date, columns=column_names)
         return player_data_for_date_df
 
