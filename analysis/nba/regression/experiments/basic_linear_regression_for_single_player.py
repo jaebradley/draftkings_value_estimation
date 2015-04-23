@@ -34,6 +34,7 @@ cleaned_out_of_sample_df_X = cleaned_out_of_sample_df_X.drop('C(teammate)[T.Dion
 print "Starting Regression"
 y, X = patsy.dmatrices(formula, cleaned_df, return_type='dataframe')
 X = X.drop('C(teammate)[T.DionWaiters]', axis=1)
+print X
 result = sm.OLS(y, X).fit()
 print result.summary()
 print cleaned_df.to_csv(path_or_buf="../csv/regression.csv")

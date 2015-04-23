@@ -42,7 +42,8 @@ def return_player_data_for_date_as_df(date):
       CASE
         WHEN previous_performance.avg_draftkings_score IS NULL THEN p14_days.avg_draftkings_score
         ELSE previous_performance.avg_draftkings_score
-      END AS previous_performance
+      END AS previous_performance,
+      (last_game.draftkings_score - p28_days.avg_draftkings_score)/p28_days.avg_draftkings_score AS last_game_compared_to_average
     FROM boxscore AS bs
     JOIN player AS pl ON bs.player = pl.id
     JOIN game AS g ON bs.game = g.id
@@ -285,8 +286,8 @@ def return_player_data_for_date_as_df(date):
 
     try:
         # boxscores for the given date
-        player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played", "previous_performance").from_statement(formatted_sql).all()
-        column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played", "previous_performance"]
+        player_data_for_date = insert_session.query("player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played", "previous_performance", "last_game_compared_to_average").from_statement(formatted_sql).all()
+        column_names = ["player", "opp_team", "player_team", "last_game", "b2b", "avg_opp_conceded_draftkings_score_for_position", "weighted_historical_draftkings_score", "actual_draftkings_score", "missing_draftkings_points", "missing_seconds_played", "previous_performance", "last_game_compared_to_average"]
         player_data_for_date_df = pd.DataFrame(player_data_for_date, columns=column_names)
         return player_data_for_date_df
 
