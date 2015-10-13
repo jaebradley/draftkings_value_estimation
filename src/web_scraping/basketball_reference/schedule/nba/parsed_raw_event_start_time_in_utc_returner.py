@@ -9,6 +9,7 @@ class ParsedRawEventStartTimeInUtcReturner:
 
     @staticmethod
     def return_parsed_start_time_in_utc(raw_event_date, raw_event_hour_of_day):
-        parsed_event_date = time.strptime(raw_event_date, "%a, %b %d, %Y")
-        parsed_hour_of_day = time.strptime(raw_event_hour_of_day, "%I:%M %p")
-        return datetime.datetime.combine(parsed_event_date, parsed_hour_of_day)
+        parsed_event_start_time = datetime.datetime.strptime(raw_event_date + raw_event_hour_of_day, "%a, %b %d, %Y%I:%M %p")
+        est = pytz.timezone("EST")
+        parsed_est_start_time = est.localize(parsed_event_start_time)
+        return parsed_est_start_time.astimezone(pytz.utc)
