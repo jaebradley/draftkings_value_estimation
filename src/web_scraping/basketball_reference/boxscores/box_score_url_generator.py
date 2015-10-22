@@ -1,4 +1,4 @@
-class BoxscoreUrlGenerator:
+class BoxScoreUrlGenerator:
     def __init__(self):
         pass
 
