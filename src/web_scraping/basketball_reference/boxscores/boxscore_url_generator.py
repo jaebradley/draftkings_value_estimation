@@ -2,7 +2,8 @@ class BoxscoreUrlGenerator:
     def __init__(self):
         pass
 
-    def generate_url(self, day, month, year):
+    @staticmethod
+    def generate_url(day, month, year):
         box_score_url_arguments = {
             'month': month,
             'day': day,
