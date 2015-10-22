@@ -6,6 +6,7 @@ class BoxScore:
             date,
             team_id,
             opp_id,
+            is_home,
             seconds_played,
             field_goals,
             field_goal_attempts,
@@ -28,6 +29,7 @@ class BoxScore:
         self.date = date
         self.team_id = team_id
         self.opp_id = opp_id
+        self.is_home = is_home
         self.seconds_played = seconds_played
         self.field_goals = field_goals
         self.field_goal_attempts = field_goal_attempts
