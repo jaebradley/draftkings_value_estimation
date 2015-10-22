@@ -11,7 +11,8 @@ class ParsedBoxScoresReturner:
     def __init__(self):
         pass
 
-    def return_raw_box_score_list_of_lists(self, box_scores_html):
+    @staticmethod
+    def return_raw_box_score_list_of_lists(box_scores_html):
         box_scores_list = list()
         header_count = len(box_scores_html.xpath('//tr[@class=""]/th//@data-stat'))
         player_html = box_scores_html.xpath('//tr[@class=""]/td')
@@ -63,10 +64,3 @@ class ParsedBoxScoresReturner:
             )
             box_scores.append(box_score)
         return box_scores
-
-
-url = BoxScoreUrlGenerator.generate_url(10, 2, 2015)
-html = BoxScoresHtmlReturner.return_html(url)
-parsed_boxscore_returner = ParsedBoxScoresReturner()
-boxscores = parsed_boxscore_returner.return_box_scores(html)
-print boxscores[0].__dict__
