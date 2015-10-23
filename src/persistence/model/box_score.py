@@ -4,8 +4,8 @@ class BoxScore:
             first_name,
             last_name,
             date,
-            team_id,
-            opp_id,
+            team,
+            opponent,
             is_home,
             seconds_played,
             field_goals,
@@ -27,8 +27,8 @@ class BoxScore:
         self.first_name = first_name
         self.last_name = last_name
         self.date = date
-        self.team_id = team_id
-        self.opp_id = opp_id
+        self.team = team
+        self.opponent = opponent
         self.is_home = is_home
         self.seconds_played = seconds_played
         self.field_goals = field_goals
