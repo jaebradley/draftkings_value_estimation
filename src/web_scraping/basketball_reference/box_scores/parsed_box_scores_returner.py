@@ -1,5 +1,5 @@
-from src.web_scraping.basketball_reference.boxscores.box_score_url_generator import BoxScoreUrlGenerator
-from src.web_scraping.basketball_reference.boxscores.box_scores_html_returner import BoxScoresHtmlReturner
+from src.web_scraping.basketball_reference.box_scores.box_score_url_generator import BoxScoreUrlGenerator
+from src.web_scraping.basketball_reference.box_scores.box_scores_html_returner import BoxScoresHtmlReturner
 from src.persistence.model.box_score import BoxScore
 
 import datetime
@@ -24,7 +24,7 @@ class ParsedBoxScoresReturner:
             count = stop
         return box_scores_list
 
-    def return_box_scores(self, box_scores_html):
+    def return_box_scores(self, box_scores_html, date):
         # TODO: currently hard-coded should probably change in the future
         box_score_list_of_lists = self.return_raw_box_score_list_of_lists(box_scores_html)
         box_scores = list()
@@ -41,7 +41,7 @@ class ParsedBoxScoresReturner:
             box_score = BoxScore(
                 first_name,
                 last_name,
-                None,
+                date,
                 box_score_list[2],
                 box_score_list[4],
                 is_home,
