@@ -47,5 +47,5 @@ class BoxScore:
         self.personal_fouls = personal_fouls
         self.points = points
 
-    def draftkings_points(self):
+    def draft_kings_points(self):
         return self.points + self.three_point_field_goals * 0.5 + self.total_rebounds * 1.25 + self.assists * 1.5 + self.steals * 2 + self.blocks * 2 - self.turnovers * 0.5
