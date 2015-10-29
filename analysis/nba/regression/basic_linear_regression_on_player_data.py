@@ -2,7 +2,7 @@ import datetime as dt
 import pandas as pd
 import statsmodels.formula.api as sm
 from analysis.nba.lib.return_player_data_for_regression import return_player_data_for_date_as_df
-from data_model.nba.web_scraping.utils.date_utils import daterange
+from persistence.nba.web_scraping.utils.date_utils import daterange
 
 
 start_date = dt.date(year=2015, month=3, day=1)

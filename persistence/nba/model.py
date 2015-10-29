@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class Position(Base):
 
     __tablename__ = "position"
@@ -14,6 +15,7 @@ class Position(Base):
     abbreviation = Column("abbreviation", VARCHAR(length=10))
 
     __table_args__ = ((UniqueConstraint("name", "abbreviation", name="name_abbreviation")),)
+
 
 class Team(Base):
 
@@ -25,6 +27,7 @@ class Team(Base):
 
     __table_args__ = ((UniqueConstraint("name", "abbreviation", name="name_abbreviation")),)
 
+
 class Game(Base):
 
     __tablename__ = "game"
@@ -35,6 +38,7 @@ class Game(Base):
     date = Column("date", DATE)
 
     __table_args__ = (UniqueConstraint("home_team", "away_team", "date", name="custom_uc_home_away_date"),)
+
 
 class Player(Base):
 
@@ -50,6 +54,7 @@ class Player(Base):
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", "team", "position", "number", name="custom_uc_first_name_last_name_team_position_number"),)
 
+
 class DraftkingsPlayerSalary(Base):
 
     __tablename__ = "draftkings_player_salary"
@@ -61,7 +66,8 @@ class DraftkingsPlayerSalary(Base):
 
     __table_args__ = (UniqueConstraint("game", "player", name="custom_uc_draftkigns_player_game"),)
 
-class BasketballReferenceBoxscore(Base):
+
+class BoxScore(Base):
 
     __tablename__ = "boxscore"
 

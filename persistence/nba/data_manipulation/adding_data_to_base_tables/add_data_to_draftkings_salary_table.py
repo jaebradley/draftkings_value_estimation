@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 
 from config import DRAFTKINGS_NBA
-from data_model.nba.model import Game, Player, DraftkingsPlayerSalary
+from persistence.nba.model import Game, Player, DraftkingsPlayerSalary
 
 def get_or_create(session, model, **kwargs):
     instance = session.query(model).filter_by(**kwargs).first()

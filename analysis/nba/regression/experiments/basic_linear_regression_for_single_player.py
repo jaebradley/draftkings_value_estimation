@@ -3,7 +3,7 @@ import pandas as pd
 import patsy
 import statsmodels.formula.api as sm
 from analysis.nba.regression.experiments.return_player_data_for_single_player import return_player_data_for_date_and_specified_player_as_df
-from data_model.nba.web_scraping.utils.date_utils import daterange
+from persistence.nba.web_scraping.utils.date_utils import daterange
 
 
 start_date = dt.date(year=2015, month=3, day=1)

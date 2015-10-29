@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 
 from config import DRAFTKINGS_NBA
-from data_model.nba.model import Team, Player, Game, BasketballReferenceBoxscore
+from persistence.nba.model import Team, Player, Game, BoxScore
 
 
 def add_data_to_boxscore_table():
@@ -53,7 +53,7 @@ def add_data_to_boxscore_table():
                     player_object = insert_session.query(Player).filter(and_(Player.first_name == first_name, Player.last_name ==last_name, Player.team == team_object.id)).one()
                     player_object.last_boxscore = date
                     game_object = insert_session.query(Game).filter(Game.date == date).filter(and_(or_(Game.home_team == team_object.id, Game.away_team == team_object.id),or_(Game.home_team == opponent_object.id, Game.away_team == opponent_object.id))).one()
-                    boxscore_object = BasketballReferenceBoxscore(
+                    boxscore_object = BoxScore(
                         player=player_object.id,
                         game=game_object.id,
                         date=date,
