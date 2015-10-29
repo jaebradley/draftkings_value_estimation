@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, PrimaryKeyConstraint, UniqueConstraint
-from sqlalchemy import VARCHAR, INTEGER, DATE, TEXT, FLOAT, TIME
+from sqlalchemy import VARCHAR, INTEGER, DATE, TEXT, FLOAT, TIME, DATETIME
 from sqlalchemy.orm import relationship, backref, relation
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -35,7 +35,7 @@ class Game(Base):
     id = Column(INTEGER, primary_key=True)
     home_team = Column(INTEGER, ForeignKey(Team.id))
     away_team = Column(INTEGER, ForeignKey(Team.id))
-    date = Column("date", DATE)
+    date = Column("start_time", DATETIME)
 
     __table_args__ = (UniqueConstraint("home_team", "away_team", "date", name="custom_uc_home_away_date"),)
 
@@ -74,7 +74,6 @@ class BoxScore(Base):
     id = Column(INTEGER, primary_key=True)
     player = Column("player", ForeignKey(Player.id))
     game = Column("game", ForeignKey(Game.id))
-    date = Column("date", DATE)
     seconds_played = Column("seconds_played", INTEGER)
     made_field_goals = Column("made_field_goals", INTEGER)
     attempted_field_goals = Column("attempted_field_goals", INTEGER)
@@ -91,6 +90,5 @@ class BoxScore(Base):
     turnovers = Column("turnovers", INTEGER)
     fouls_committed = Column("fouls_committed", INTEGER)
     points = Column("points", INTEGER)
-    draftkings_score = Column("draftkings_score", FLOAT(precision=2))
 
     __table_args__ = (UniqueConstraint("player", "game", name="custom_uc_player_game"),)
