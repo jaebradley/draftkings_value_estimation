@@ -8,7 +8,8 @@ def main(first_season_start_year, last_season_start_year):
     for season_start_year in range(first_season_start_year, last_season_start_year + 1):
         season_schedule_output_file = os.path.join(dir, '../static/schedules/{0}.json'.format(season_start_year))
         write_season_schedule_to_json(season_start_year=season_start_year, output_file_path=season_schedule_output_file)
-        write_box_scores_for_season_to_json(season_start_year=season_start_year)
+        box_scores_directory = os.path.join(dir, '../static/box_scores')
+        write_box_scores_for_season_to_json(season_start_year=season_start_year, output_file_directory=box_scores_directory)
 
 
 main(2014, 2015)
