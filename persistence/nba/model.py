@@ -35,9 +35,9 @@ class Game(Base):
     id = Column(INTEGER, primary_key=True)
     home_team = Column(INTEGER, ForeignKey(Team.id))
     away_team = Column(INTEGER, ForeignKey(Team.id))
-    date = Column("start_time", DATETIME)
+    start_time = Column("start_time", DATETIME)
 
-    __table_args__ = (UniqueConstraint("home_team", "away_team", "date", name="custom_uc_home_away_date"),)
+    __table_args__ = (UniqueConstraint("home_team", "away_team", "start_time", name="custom_uc_home_away_start_time"),)
 
 
 class Player(Base):
