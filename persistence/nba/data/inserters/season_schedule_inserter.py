@@ -14,6 +14,6 @@ def insert_json_encoded_schedule_into_database(json_encoded_schedule, postgres_e
     for event in schedule.parsed_event_list:
         home_team_object = insert_session.query(Team).filter_by(name=event.home_team_name).one()
         away_team_object = insert_session.query(Team).filter_by(name=event.visiting_team_name).one()
-        game = Game(home_team=home_team_object.id, away_team=away_team_object.id, date=event.)
+        game = Game(home_team=home_team_object.id, away_team=away_team_object.id, start_time=event.start_time)
         insert_session.add(game)
         insert_session.commit()

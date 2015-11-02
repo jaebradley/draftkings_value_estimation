@@ -14,7 +14,7 @@ class Position(Base):
     name = Column("name", VARCHAR(length=50))
     abbreviation = Column("abbreviation", VARCHAR(length=10))
 
-    __table_args__ = ((UniqueConstraint("name", "abbreviation", name="name_abbreviation")),)
+    __table_args__ = ((UniqueConstraint("name", "abbreviation", name="position_name_abbreviation")),)
 
 
 class Team(Base):
@@ -25,7 +25,7 @@ class Team(Base):
     name = Column("name", VARCHAR(length=200))
     abbreviation = Column("abbreviation", VARCHAR(length=100))
 
-    __table_args__ = ((UniqueConstraint("name", "abbreviation", name="name_abbreviation")),)
+    __table_args__ = ((UniqueConstraint("name", "abbreviation", name="team_name_abbreviation")),)
 
 
 class Game(Base):
