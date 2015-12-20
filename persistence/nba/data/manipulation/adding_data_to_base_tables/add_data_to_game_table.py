@@ -4,10 +4,10 @@ from sqlalchemy.orm import sessionmaker
 from persistence.nba.model import Team, Game
 
 
-def add_data_to_game_table(postgres_engine):
+def add_data_to_game_table(postgres_engine, nba_schedule_file_name):
     session = sessionmaker(bind=postgres_engine)
     insert_session = session()
-    with open('data_files/nba_schedule.txt') as file:
+    with open(nba_schedule_file_name) as file:
         reader = csv.reader(file)
         nba_schedule_list = list(reader)[1:]
         for game in nba_schedule_list:

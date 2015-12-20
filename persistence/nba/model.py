@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, PrimaryKeyConstraint, UniqueConstraint
-from sqlalchemy import VARCHAR, INTEGER, DATE, TEXT, FLOAT, TIME, DATETIME
-from sqlalchemy.orm import relationship, backref, relation
+from sqlalchemy import Column, ForeignKey, UniqueConstraint
+from sqlalchemy import VARCHAR, INTEGER, DATE, FLOAT, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -35,7 +34,7 @@ class Game(Base):
     id = Column(INTEGER, primary_key=True)
     home_team = Column(INTEGER, ForeignKey(Team.id))
     away_team = Column(INTEGER, ForeignKey(Team.id))
-    start_time = Column("start_time", DATETIME)
+    start_time = Column("start_time", DateTime)
 
     __table_args__ = (UniqueConstraint("home_team", "away_team", "start_time", name="custom_uc_home_away_start_time"),)
 

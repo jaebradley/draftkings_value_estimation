@@ -6,9 +6,9 @@ from sqlalchemy.engine.url import URL
 from config import DRAFTKINGS_NBA
 
 
-def add_data_to_team_table():
+def add_data_to_team_table(team_name_map_filename):
 
-    with open('data_files/nba_team_name_map.csv') as file:
+    with open(team_name_map_filename) as file:
         reader = csv.reader(file)
         nba_team_name_list = list(reader)[1:]
         insert_nba_team_name_list = list()

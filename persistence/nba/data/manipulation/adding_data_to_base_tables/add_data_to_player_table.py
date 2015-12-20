@@ -8,10 +8,9 @@ from config import DRAFTKINGS_NBA
 from persistence.nba.model import Team, Player, Position
 
 
-def add_data_to_player_table():
+def add_data_to_player_table(connection):
 
-    mysql_connection = create_engine(URL(**DRAFTKINGS_NBA))
-    session = sessionmaker(bind=mysql_connection)
+    session = sessionmaker(bind=connection)
     insert_session = session()
 
     with open('data_files/player_position.csv') as file:

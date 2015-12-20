@@ -9,3 +9,5 @@ scipy==0.15.1
 six==1.9.0
 statsmodels==0.6.1
 wsgiref==0.1.2
+basketball-reference-web-scraper
+psycopg2
