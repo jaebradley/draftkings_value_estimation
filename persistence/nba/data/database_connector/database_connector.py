@@ -1,4 +1,4 @@
-class DatabaseConnection:
+class DatabaseConnector:
     def __init__(self, driver_name, host, port, database, server):
         self.server = server
         self.database = database

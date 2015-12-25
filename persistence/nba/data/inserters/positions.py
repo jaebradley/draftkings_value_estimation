@@ -1,36 +1,32 @@
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.engine.url import URL
-
-from config import DRAFTKINGS_NBA
+from persistence.nba.data.utils.functions import get_or_create
+from persistence.nba.model import Position
 
 
-def insert_positions():
+class PositionInserter:
+    def __init__(self):
+        self.positions = [
+            {
+                'name': 'Point Guard',
+                'abbreviation': 'PG'
+            },
+            {
+                'name': 'Shooting Guard',
+                'abbreviation': 'SG'
+            },
+            {
+                'name': 'Small Forward',
+                'abbreviation': 'SF'
+            },
+            {
+                'name': 'Power Forward',
+                'abbreviation': 'PF'
+            },
+            {
+                'name': 'Center',
+                'abbreviation': 'C'
+            }
+        ]
 
-    position_list = [
-        {
-            'name': 'Point Guard',
-            'abbreviation': 'PG'
-        },
-        {
-            'name': 'Shooting Guard',
-            'abbreviation': 'SG'
-        },
-        {
-            'name': 'Small Forward',
-            'abbreviation': 'SF'
-        },
-        {
-            'name': 'Power Forward',
-            'abbreviation': 'PF'
-        },
-        {
-            'name': 'Center',
-            'abbreviation': 'C'
-        }
-    ]
-
-    postgres_engine = create_engine(URL(**DRAFTKINGS_NBA))
-    metadata = MetaData(postgres_engine)
-    position = Table("position", metadata, autoload=True)
-    position_insert = position.insert()
-    position_insert.execute(position_list)
+    def insert_positions(self, session):
+        for position in self.positions:
+            get_or_create(session, Position, name=position['name'], abbreviation=position['abbreviation'])
