@@ -4,7 +4,7 @@ from sqlalchemy.engine.url import URL
 from config import DRAFTKINGS_NBA
 
 
-def add_data_to_position_table():
+def positions():
 
     position_list = [
         {
