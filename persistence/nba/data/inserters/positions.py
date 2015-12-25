@@ -4,7 +4,7 @@ from sqlalchemy.engine.url import URL
 from config import DRAFTKINGS_NBA
 
 
-def add_data_to_position_table():
+def insert_positions():
 
     position_list = [
         {
@@ -29,8 +29,8 @@ def add_data_to_position_table():
         }
     ]
 
-    mysql_connection = create_engine(URL(**DRAFTKINGS_NBA))
-    metadata = MetaData(mysql_connection)
+    postgres_engine = create_engine(URL(**DRAFTKINGS_NBA))
+    metadata = MetaData(postgres_engine)
     position = Table("position", metadata, autoload=True)
     position_insert = position.insert()
     position_insert.execute(position_list)
