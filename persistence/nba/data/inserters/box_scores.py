@@ -18,7 +18,7 @@ from persistence.nba.data.utils.functions import get_or_create
 from persistence.nba.config import DRAFTKINGS_NBA
 from persistence.nba.model import Game, BoxScore, Team, Player
 
-def insert_box_score(box_score, session):
+def insert_box_scores(box_score, session):
     team_object = session.query(Team).filter(Team.abbreviation == box_score.team).one()
     opponent = session.query(Team).filter(Team.abbreviation == box_score.opponent).one()
     try:
@@ -61,6 +61,6 @@ def main(minimum_date, maximum_date):
     for start_day in distinct_start_days:
         box_scores = return_box_scores_for_date(start_day)
         for box_score in box_scores:
-            insert_box_score(box_score, insert_session)
+            insert_box_scores(box_score, insert_session)
 
 main(minimum_date=datetime(2015, 10, 10), maximum_date=datetime.now(pytz.utc).date())

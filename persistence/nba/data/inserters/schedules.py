@@ -8,7 +8,7 @@ from persistence.nba.data.utils.functions import get_or_create
 from persistence.nba.model import Team, Game
 
 
-def main(season_first_start_year, season_last_start_year):
+def insert_schedules(season_first_start_year, season_last_start_year):
     postgres_engine = create_engine(URL(**DRAFTKINGS_NBA))
     session = sessionmaker(bind=postgres_engine)
     insert_session = session()
@@ -20,4 +20,4 @@ def main(season_first_start_year, season_last_start_year):
             get_or_create(insert_session, Game, home_team=home_team.id, away_team=away_team.id, start_time=event.start_time)
 
 
-main(2014, 2015)
+insert_schedules(2014, 2015)

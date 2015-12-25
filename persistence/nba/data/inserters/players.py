@@ -9,7 +9,7 @@ from persistence.nba.data.utils.functions import get_or_create
 from persistence.nba.model import Position, Team, Player
 
 
-def main(season_start_year):
+def insert_players(season_start_year):
     connection = create_engine(URL(**DRAFTKINGS_NBA))
     session = sessionmaker(bind=connection)
     insert_session = session()
@@ -22,4 +22,4 @@ def main(season_start_year):
         except NoResultFound:
             print player_season.position
 
-main(2015)
+insert_players(2015)
