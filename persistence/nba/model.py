@@ -91,3 +91,5 @@ class BoxScore(Base):
     points = Column("points", INTEGER)
 
     __table_args__ = (UniqueConstraint("player", "game", name="custom_uc_player_game"),)
+
+    def draftkings_points(self): self.points + self.three_point_field_goals * 0.5 + self.total_rebounds * 1.25 + self.assists * 1.5 + self.steals * 2 + self.blocks * 2 - self.turnovers * 0.5
