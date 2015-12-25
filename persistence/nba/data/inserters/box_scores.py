@@ -11,6 +11,7 @@ from sqlalchemy import distinct
 from sqlalchemy import func
 from sqlalchemy import or_, and_
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from sqlalchemy.exc import IntegrityError
 
 from persistence.nba.data.utils.functions import get_or_create
 from persistence.nba.model import Game, BoxScore, Team, Player
@@ -50,6 +51,9 @@ class BoxScoreInserter:
             )
         except (NoResultFound, MultipleResultsFound):
             print box_score.date, box_score.team, box_score.opponent
+        except IntegrityError:
+            print box_score.date, box_score.team, box_score.opponent
+            session.rollback()
 
 
     def insert_box_scores(self, session, minimum_date, maximum_date):
