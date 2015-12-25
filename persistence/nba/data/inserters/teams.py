@@ -1,26 +1,16 @@
 import csv
 
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.engine.url import URL
-
-from config import DRAFTKINGS_NBA
+from persistence.nba.data.utils.functions import get_or_create
+from persistence.nba.model import Team
 
 
-def insert_teams(team_name_map_filename):
+class TeamInserter:
+    def __init__(self):
+        pass
 
-    with open(team_name_map_filename) as file:
-        reader = csv.reader(file)
-        nba_team_name_list = list(reader)[1:]
-        insert_nba_team_name_list = list()
-        for team in nba_team_name_list:
-            temp_dict = {
-                'name': team[2],
-                'abbreviation': team[1]
-            }
-            insert_nba_team_name_list.append(temp_dict)
-
-    postgres_engine = create_engine(URL(**DRAFTKINGS_NBA))
-    metadata = MetaData(postgres_engine)
-    team = Table("team", metadata, autoload=True)
-    team_insert = team.insert()
-    team_insert.execute(insert_nba_team_name_list)
+    def insert_teams(self, session, team_name_csv):
+        with open(team_name_csv) as file:
+            reader = csv.reader(file)
+            nba_team_name_list = list(reader)[1:]
+            for team in nba_team_name_list:
+                get_or_create(session, Team, name=team[2], abbreviation=team[1])
