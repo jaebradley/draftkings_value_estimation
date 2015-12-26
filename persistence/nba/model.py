@@ -1,8 +1,10 @@
 from sqlalchemy import Column, ForeignKey, UniqueConstraint
 from sqlalchemy import VARCHAR, INTEGER, DATE, FLOAT, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from flask import Flask
 
 Base = declarative_base()
+app = Flask(__name__)
 
 
 class Position(Base):
@@ -49,7 +51,6 @@ class Player(Base):
     team = Column(INTEGER, ForeignKey(Team.id))
     position = Column(INTEGER, ForeignKey(Position.id))
     number = Column("number", INTEGER, nullable=True)
-    last_boxscore = Column("last_boxscore", DATE, nullable=True)
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", "team", "position", "number", name="custom_uc_first_name_last_name_team_position_number"),)
 
@@ -89,7 +90,6 @@ class BoxScore(Base):
     turnovers = Column("turnovers", INTEGER)
     fouls_committed = Column("fouls_committed", INTEGER)
     points = Column("points", INTEGER)
+    draftkings_points = Column("draftkings_points", FLOAT)
 
     __table_args__ = (UniqueConstraint("player", "game", name="custom_uc_player_game"),)
-
-    def draftkings_points(self): self.points + self.three_point_field_goals * 0.5 + self.total_rebounds * 1.25 + self.assists * 1.5 + self.steals * 2 + self.blocks * 2 - self.turnovers * 0.5

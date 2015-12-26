@@ -47,11 +47,10 @@ class BoxScoreInserter:
                 blocks=box_score.blocks,
                 turnovers=box_score.turnovers,
                 fouls_committed=box_score.personal_fouls,
-                points=box_score.points
+                points=box_score.points,
+                draftkings_points=float(box_score.points) + float(box_score.three_point_field_goals) * 0.5 + float(box_score.total_rebounds) * 1.25 + float(box_score.assists) * 1.5 + float(box_score.steals) * 2 + float(box_score.blocks) * 2 - float(box_score.turnovers) * 0.5
             )
-        except (NoResultFound, MultipleResultsFound):
-            print box_score.date, box_score.team, box_score.opponent
-        except IntegrityError:
+        except (NoResultFound, MultipleResultsFound, IntegrityError):
             print box_score.date, box_score.team, box_score.opponent
             session.rollback()
 

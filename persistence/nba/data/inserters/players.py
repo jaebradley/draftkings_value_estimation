@@ -14,7 +14,13 @@ class PlayerInserter:
         for player_season in player_season_statistics:
             team = session.query(Team).filter(Team.abbreviation == player_season.team).one()
             try:
-                position = session.query(Position).filter(Position.abbreviation == player_season.position).one()
+                if player_season.position == 'G':
+                    player_position = 'PG'
+                elif player_season.position == 'F':
+                    player_position = 'SF'
+                else:
+                    player_position = player_season.position
+                position = session.query(Position).filter(Position.abbreviation == player_position).one()
                 get_or_create(session, Player, first_name=player_season.first_name, last_name=player_season.last_name, team=team.id, position=position.id)
             except NoResultFound:
                 print player_season.position

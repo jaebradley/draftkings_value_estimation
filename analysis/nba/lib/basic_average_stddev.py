@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta
-from persistence.nba.data.database_connector import db_session
+from datetime import timedelta
 import pandas
+from persistence.nba.data.database_connector import db_session
 
 def return_average_and_stddev(date):
     twenty_eight_days_ago = date - timedelta(28)
